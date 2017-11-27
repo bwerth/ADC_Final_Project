@@ -1,4 +1,5 @@
 Final Project Work Plan
+Initial Research - Done by 11/29
 LMS Implementation - Done by Friday 12/1
 First Pass Full Implementation - Done by Sunday 12/3
 Final Implementation - Done by Monday 12/11
