@@ -1,0 +1,5 @@
+Final Project Work Plan
+LMS Implementation - Done by Friday 12/1
+First Pass Full Implementation - Done by Sunday 12/3
+Final Implementation - Done by Monday 12/11
+Final Deliverable - Done by Friday 12/15
