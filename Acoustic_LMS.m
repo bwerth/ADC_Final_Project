@@ -6,19 +6,23 @@ t=[0:N-1];  %vector N integers incrementing from 0
 w0=0.001;   %frequency of sinewave test input
 phi=0.1;    %phase for sinewave test input
 d=sin(2*pi*[1:N]*w0+phi);   %desired signal in our case just a sinewave
-x=d+randn(1,N)*0.5;         %signal with noise
-w=zeros(1,N);               %weights vector initialized at 0
-mu=0.05;                    %step size
-LMS_ORDER = 500;            %length of weights vector
+x=d+randn(1,N)*0.5;         %signal with noise                 %step size
+M = 50;                     %LMS filter order
+w=zeros(M,N);               %initialize weight vector
+mu=0.01;                    %step size
+for i=(M+1):N
+   e(i) = d(i) -  x((i-(M)+1):i)*w(:,i);    %error calculation
+   w(:,i+1) = w(:,i) + mu * e(i) * x((i-(M)+1):i)'; %weight update equation
+end
+for i=(M+1):N
+    yd(i) = x((i-(M)+1):i)*w(:,i);  %calculate the filtered noisy input
+end
 
-for i=LMS_ORDER:N
-   e(i) = d(i) - w(i)' * x(i);
-   w(i+1) = w(i) + mu * e(i) * x(i);
+for i=1:length(e)
+    mse(i)= mean(e(1:i).^2);    %calculate mean squared error for plotting
 end
-for i=1:N
-yd(i) = sum(w(i)' * x(i));  
-end
+
 subplot(221),plot(t,d),ylabel('Desired Signal'),
 subplot(222),plot(t,x),ylabel('Input Signal+Noise'),
-subplot(223),plot(t,e),ylabel('Error'),
+subplot(223),plot(t,mse),ylabel('Mean Squared Error'),
 subplot(224),plot(t,yd),ylabel('Adaptive Desired output');
