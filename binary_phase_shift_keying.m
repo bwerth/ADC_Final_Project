@@ -74,6 +74,8 @@ for j = 1: length(rbb)/n :length(rbb)
     IS = [IS -trapz(rbb([(j-1+length(rbb)/n) j]))];
 end
 
+[mse_out,yd_out,w_out,stepSize_out] = Acoustic_VariableStep_nLMS(IS,0,1,50,.001,.5,.25);
+
 IS(IS<0) = [0]; % turning negative ones to zeros
 
 
