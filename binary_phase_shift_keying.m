@@ -5,12 +5,12 @@ close all
 %%%%%%% Transmitter %%%%%%%%%%
 
 % binary phase shift keying
-
-% create a simple word
-n = 8; % length of the word
-
-% giving the random word a binary signal
-m = randi([0 1], n, 1)
+%convert text string to binary string to be transmitted
+text = 'testing testing 123';
+m = dec2bin(text,8) - '0';
+m = m';
+m = m(:)';
+n= length(m);
 
 %phase for 0
 p1 = 0;
@@ -18,20 +18,22 @@ p1 = 0;
 %phase for 1
 p2 = pi;
 
-% frequency of the signal
-f = 3;
+% frequency of the carrier
+f = 1000;% in Hz
 
 % sampling rate
-fs = 100;
+fs = 8192;
+dt=1/fs; %seconds per sample
+symbol_period = 0.5;
 
 % time
-t = 0: 1/fs : 1;
+t = 0: dt : 1;
 
 psk_sig = [];   % phase shift keyed signal
 orig_msg = [];  % the original message
 time = [];      % the time vector, good for plotting
 
-for i = 1: 1: length(m)
+for i = 1: length(m)
     
     % creating the psk signal
     psk_sig = [psk_sig (m(i)==0)*cos(2*pi*f*t + p1)+...
@@ -61,6 +63,7 @@ legend('Phase-shifted signal', 'Original binary message');
 
 % rbb is the input to the receiver multiplied by
 %   the cosine
+
 rbb = [];
 
 for j = 1:1: length(psk_sig)
