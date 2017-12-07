@@ -1,4 +1,4 @@
-function [mse,yd,w,stepSize] = Acoustic_VariableStep_nLMS(d,training,x,a, M, umin, umax, beta)
+function [mse,yd,w,stepSize] = Acoustic_VariableStep_nLMS(training,x,a, M, umin, umax, beta)
 %This function accepts a desired signal (d), an input with noise (x), nLMS
 %bias (a), LMS order M, adaptation rate minimum (umin), adaptation rate
 %maximum (umax), and step size change rate constant (beta)
@@ -12,8 +12,8 @@ w=zeros(M,N);   %initialize weight vector
 
 for i=(M+1):N
    yd(i) = x((i-(M)+1):i)*w(:,i);  %calculate the filtered noisy input
-   if (training == 1)
-    e(i) = d(i)-yd(i);
+   if (any(training))
+    e(i) = training(i)-yd(i);
    else
     e(i) = sign(yd(i)) -  yd(i); %error calculation
    end
