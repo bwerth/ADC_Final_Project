@@ -34,10 +34,10 @@ p1 = 0;
 p2 = pi;
 
 % frequency of the carrier
-f = 1000;% in Hz
+f = 2000;% in Hz
 
 % sampling rate
-fs = 8192;
+fs = 44100;
 dt=1/fs; %seconds per sample
 symbol_freq = 100; %bitrate in Hz
 symbol_period = 1/symbol_freq; %symbol period in seconds
