@@ -12,14 +12,9 @@ t = 0: dt : symbol_period; % time vector
 receive_time = 10; %recording time in seconds
 
 
-%_________________________low pass filter parameters_____________________
-N   = 500;        % FIR filter order
-Fp  = 1000;       % cuttoff frequency in Hz
-Rp  = 0.00057565; % Corresponds to 0.01 dB peak-to-peak ripple
-Rst = 1e-4;       % Corresponds to 80 dB stopband attenuation
-eqnum = firceqrip(N,Fp/(fs/2),[Rp Rst],'passedge'); % eqnum = vec of coeffs
-lowpassFIR = dsp.FIRFilter('Numerator',eqnum); %or eqNum200 or numMinOrder
 %_______________________training signal and synchronization parameters_______________________
+
+Fc = 1000; %cutoff frequency in Hz
 %normally distributed pre-defined training signal, common between
 %transmitter and receiver
 train = [...
@@ -56,7 +51,8 @@ for j = 1:1: length(psk_sig)
     rbb(j) = cos(2*pi*f*time(j))*psk_sig(j);
 end
 
-rbb_lowpass = lowpassFIR(rbb);
+rbb_lowpass = filterlp(rbb, (2*pi*Fc)/fs);
+rbb_lowpass = rbb_lowpass(101:end - 100);%truncate to remove convolution effect
 
 % IS is the integrated signal
 IS = [];
