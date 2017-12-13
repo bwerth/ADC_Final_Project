@@ -27,7 +27,7 @@ dt=1/fs; %seconds per sample
 symbol_period = 0.5;
 
 % time
-t = 0: dt : 1;
+t = 0: dt : symbol_period;
 
 psk_sig = [];   % phase shift keyed signal
 orig_msg = [];  % the original message
@@ -45,7 +45,7 @@ for i = 1: length(m)
     
     % updating the time
     time = [time t];
-    t = t + 1;
+    t = t + symbol_period;
 end
 
 % plotting the phase shift keyed signal
@@ -67,8 +67,32 @@ legend('Phase-shifted signal', 'Original binary message');
 rbb = [];
 
 for j = 1:1: length(psk_sig)
-    rbb(j) = cos(2*pi*fs)*psk_sig(j);
+    rbb(j) = cos(2*pi*f*time(j))*psk_sig(j);
 end
+
+rbb_lpf = fftshift(abs(fft(rbb)));
+
+for i = 1:length(rbb_lpf)
+    if ((i < (2.6*10^5)) || (i > (3.5 * 10^5))) 
+        rbb_lpf(i) = 0;
+    end
+end
+
+figure;
+plot(time, lpf(rbb));
+title('lpf signal fft');
+
+figure;
+
+plot(fftshift(abs(fft((rbb)))));
+title('orig signal fft');
+
+rbb_ifft = ifft(rbb_lpf,'symmetric');
+
+figure;
+plot(time, rbb_ifft);
+title('lpf signal ifft')
+
 
 % IS is the integrated signal
 IS = [];
