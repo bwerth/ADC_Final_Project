@@ -7,15 +7,15 @@ function [mse,yd,w,stepSize] = Acoustic_VariableStep_nLMS(training,x,a, M, umin,
 %mean squared error vector, filtered is the adaptively filter output, and 
 %w is the calculated weights vector.
 
-N=length(d);    %Length of input in samples
+N=length(training);    %Length of input in samples
+N2 = length(x);
 w=zeros(M,N);   %initialize weight vector
-
-for i=(M+1):N
+for i=(M+1):N2
    yd(i) = x((i-(M)+1):i)*w(:,i);  %calculate the filtered noisy input
-   if (any(training))
-    e(i) = training(i)-yd(i);
+   if(i>N) 
+       e(i) = sign(yd(i))-yd(i);
    else
-    e(i) = sign(yd(i)) -  yd(i); %error calculation
+       e(i) = training(i)-yd(i);
    end
    sigma_c = (yd(i)'*yd(i))/(rms(x(i))^2);          %tracking error estimate
    u=umax + (umin-umax)*exp(-beta*sigma_c);         %variable step size calculation
@@ -24,6 +24,5 @@ for i=(M+1):N
    w(:,i+1) = w(:,i) + mu * e(i) * x((i-(M)+1):i)'; %weight update equation
    mse(i)= mean(e.^2);                              %calculate mean squared error for plotting
 end
-
 %error is the floor/ceiling of the received, weight signal (to 1/-1) minus the
 %received, weighted signal
