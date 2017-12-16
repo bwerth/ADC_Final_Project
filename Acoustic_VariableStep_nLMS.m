@@ -1,4 +1,4 @@
-function [mse,yd,w,stepSize] = Acoustic_VariableStep_nLMS(training,x,a, M, umin, umax, beta)
+function [mse,yd,w,stepSize,e] = Acoustic_VariableStep_nLMS(training,x,a, M, umin, umax, beta)
 %This function accepts a desired signal (d), an input with noise (x), nLMS
 %bias (a), LMS order M, adaptation rate minimum (umin), adaptation rate
 %maximum (umax), and step size change rate constant (beta)
